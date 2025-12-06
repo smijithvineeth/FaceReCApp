@@ -1,0 +1,15 @@
+id = "yii2-navigation"
+name = "Yii2 Navigation"
+version = "0.1.0"
+schema_version = 1
+description = "Navigate between Yii2 controllers and views with Ctrl+Click on render() calls"
+repository = "https://github.com/local/yii2-navigation"
+authors = ["Zed Extension Developer"]
+
+[lib]
+kind = "Rust"
+version = "0.2.0"
+
+[language_servers.yii2-ls]
+name = "Yii2 Language Server"
+language = "PHP"
