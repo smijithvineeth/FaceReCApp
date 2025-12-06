@@ -118,7 +118,7 @@ function uriToPath(uri) {
 
 function pathToUri(filePath) {
     // Convert local path to file:// URI
-    let uri = filePath.replace(/\/g, '/');
+    let uri = filePath.replace(/\\/g, '/');
     
     // Add file:// prefix
     if (uri.match(/^[a-zA-Z]:/)) {

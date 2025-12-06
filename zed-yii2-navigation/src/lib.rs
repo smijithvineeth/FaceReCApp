@@ -110,10 +110,15 @@ impl zed::Extension for Yii2NavigationExtension {
     ) -> Result<zed::Command> {
         let node_path = self.node_binary_path(language_server_id, worktree)?;
         
+        let server_script = std::env::current_dir()
+            .map_err(|e| format!("failed to get current directory: {e}"))?
+            .join("language_server")
+            .join("server.js");
+        
         Ok(zed::Command {
             command: node_path,
             args: vec![
-                "language_server/server.js".to_string(),
+                server_script.to_string_lossy().to_string(),
                 "--stdio".to_string(),
             ],
             env: Default::default(),
