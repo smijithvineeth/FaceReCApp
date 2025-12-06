@@ -9,8 +9,3 @@ authors = ["Zed Extension Developer"]
 [lib]
 kind = "Rust"
 version = "0.2.0"
-
-# Include language_server directory
-[language_servers.yii2-ls]
-name = "Yii2 Language Server"
-language = "PHP"

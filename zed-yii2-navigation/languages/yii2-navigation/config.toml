@@ -1,0 +1,7 @@
+name = "Yii2 PHP"
+grammar = "php"
+path_suffixes = ["php"]
+language_servers = ["yii2-ls"]
+
+line_comments = ["//"]
+block_comment = ["/*", "*/"]
