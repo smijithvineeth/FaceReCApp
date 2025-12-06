@@ -1,5 +1,6 @@
 use zed_extension_api::{self as zed, LanguageServerId, Result, Worktree};
 use std::fs;
+use std::path::PathBuf;
 
 struct Yii2NavigationExtension {
     cached_node_binary: Option<String>,
@@ -98,6 +99,16 @@ impl Yii2NavigationExtension {
 
 impl zed::Extension for Yii2NavigationExtension {
     fn new() -> Self {
+        // Copy language server files to work directory if not already there
+        let work_dir = std::env::current_dir().ok();
+        if let Some(dir) = work_dir {
+            let server_js = dir.join("language_server").join("server.js");
+            if !server_js.exists() {
+                // Files will be in the extension's installation directory
+                // Zed will handle copying them during installation
+            }
+        }
+        
         Self {
             cached_node_binary: None,
         }
@@ -110,10 +121,15 @@ impl zed::Extension for Yii2NavigationExtension {
     ) -> Result<zed::Command> {
         let node_path = self.node_binary_path(language_server_id, worktree)?;
         
-        let server_script = std::env::current_dir()
-            .map_err(|e| format!("failed to get current directory: {e}"))?
-            .join("language_server")
-            .join("server.js");
+        // Use the standalone server (no npm dependencies)
+        let server_script = PathBuf::from("yii2-server.js");
+        
+        // Write the server script if it doesn't exist
+        if !server_script.exists() {
+            const SERVER_CODE: &[u8] = include_bytes!("../yii2-server.js");
+            std::fs::write(&server_script, SERVER_CODE)
+                .map_err(|e| format!("failed to write server script: {e}"))?;
+        }
         
         Ok(zed::Command {
             command: node_path,

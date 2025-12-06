@@ -10,15 +10,37 @@ This extension provides Ctrl+Click navigation from Yii2 controller render() call
 
 ## Installation
 
-The extension has been installed to:
-`C:\Users\USER\AppData\Local\Zed\extensions\installed\yii2-navigation\`
+1. Copy the `zed-yii2-navigation` folder to Zed's extensions directory:
+   - **Windows**: `%APPDATA%\Zed\extensions\installed\yii2-navigation\`
+   - **macOS**: `~/Library/Application Support/Zed/extensions/installed/yii2-navigation\`
+   - **Linux**: `~/.config/zed/extensions/installed/yii2-navigation\`
+
+2. Restart Zed editor
+
+## Configuration
+
+Add this to your Zed settings (Ctrl+, or Cmd+,):
+
+```json
+{
+  "languages": {
+    "PHP": {
+      "language_servers": ["yii2-ls", "..."]
+    }
+  }
+}
+```
+
+**Note**: The `"..."` means "keep existing language servers". This allows the Yii2 extension to work alongside other PHP tools.
 
 ## Usage
 
 1. Open a Yii2 PHP file containing `$this->render('view_name')` calls
-2. Hold Ctrl and hover over the view name (the string inside quotes)
+2. Hold Ctrl (Cmd on Mac) and hover over the **view name string** (e.g., `'index'`)
 3. The view name should become underlined/clickable
 4. Click to navigate to the view file
+
+**Important**: The cursor must be **on the string** ('index'), not on `render` or `$this`.
 
 ## Supported Patterns
 

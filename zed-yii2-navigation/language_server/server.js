@@ -52,6 +52,8 @@ connection.onInitialize((params) => {
 });
 
 connection.onInitialized(() => {
+    connection.console.log('Yii2 Language Server initialized successfully!');
+    
     if (hasConfigurationCapability) {
         connection.client.register(DidChangeConfigurationNotification.type, undefined);
     }
@@ -64,8 +66,11 @@ connection.onInitialized(() => {
 
 // Go to definition handler
 connection.onDefinition((params) => {
+    connection.console.log(`Definition request received at ${params.position.line}:${params.position.character}`);
+    
     const document = documents.get(params.textDocument.uri);
     if (!document) {
+        connection.console.log('Document not found');
         return null;
     }
 
@@ -73,6 +78,8 @@ connection.onDefinition((params) => {
     const text = document.getText();
     const lines = text.split('\n');
     const line = lines[position.line];
+    
+    connection.console.log(`Line content: ${line}`);
 
     // Match $this->render('view_name', array(...))
     // Also match $this->render("view_name", array(...))
@@ -86,21 +93,32 @@ connection.onDefinition((params) => {
 
         // Check if cursor is on the view name
         if (position.character >= matchStart && position.character <= matchEnd) {
+            connection.console.log(`Found view name: ${viewName}`);
+            
             const documentPath = uriToPath(params.textDocument.uri);
+            connection.console.log(`Document path: ${documentPath}`);
+            
             const viewPath = resolveViewPath(documentPath, viewName);
+            connection.console.log(`Resolved view path: ${viewPath}`);
 
             if (viewPath && fs.existsSync(viewPath)) {
+                const viewUri = pathToUri(viewPath);
+                connection.console.log(`Returning URI: ${viewUri}`);
+                
                 return {
-                    uri: pathToUri(viewPath),
+                    uri: viewUri,
                     range: {
                         start: { line: 0, character: 0 },
                         end: { line: 0, character: 0 }
                     }
                 };
+            } else {
+                connection.console.log('View file not found');
             }
         }
     }
-
+    
+    connection.console.log('No render() call found at cursor position');
     return null;
 });
 
